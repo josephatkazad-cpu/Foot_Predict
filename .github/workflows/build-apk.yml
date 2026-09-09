@@ -1,1 +1,40 @@
+name: Build FootPredict APK
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Télécharger le projet
+        uses: actions/checkout@v4
+
+      - name: Installer Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Décompresser le fichier ZIP
+        run: |
+          unzip *.zip
+
+      - name: Rendre gradlew exécutable
+        run: |
+          find . -name "gradlew" -exec chmod +x {} \;
+
+      - name: Construire APK
+        run: |
+          GRADLEW_PATH=$(find . -name "gradlew" | head -n 1)
+          DIR=$(dirname "$GRADLEW_PATH")
+          cd "$DIR"
+          ./gradlew assembleDebug
+
+      - name: Publier APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: FootPredict-APK
+          path: '**/build/outputs/apk/debug/*.apk'
+          
