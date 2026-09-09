@@ -14,32 +14,17 @@ jobs:
       - name: Installer Java 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Installer Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
-
-      - name: Installer Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.7'
-
-      - name: Décompresser le projet
-        run: |
-          unzip -o FootPredict_AndroidStudio_CloudReady.zip
-          find FootPredict_AndroidStudio -maxdepth 3 -type f | head -50
+      - name: Rendre gradlew exécutable
+        run: chmod +x gradlew
 
       - name: Construire APK
-        working-directory: FootPredict_AndroidStudio
-        run: |
-          gradle --no-daemon :app:assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Publier APK
         uses: actions/upload-artifact@v4
         with:
           name: FootPredict-APK
-          path: FootPredict_AndroidStudio/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+          path: app/build/outputs/apk/debug/app-debug.apk
