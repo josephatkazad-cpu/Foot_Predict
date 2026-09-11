@@ -19,7 +19,7 @@ jobs:
 
       - name: Décompresser le fichier ZIP
         run: |
-          unzip *.zip
+          unzip FootPredict_AndroidStudio_GitHub_V3.zip
 
       - name: Rendre gradlew exécutable
         run: |
